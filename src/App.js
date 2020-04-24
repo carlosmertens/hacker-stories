@@ -36,7 +36,7 @@ function App() {
       <h1>My Hacker Stories</h1>
 
       {/* Render primitive variables */}
-      <p>Hello {welcome.name} and welcome to {getLang(welcome.lang)}!</p>
+      <h3>Hello {welcome.name} and welcome to {getLang(welcome.lang)}!</h3>
       <hr />
 
       {/* Call List component */}
