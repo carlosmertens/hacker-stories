@@ -22,13 +22,14 @@ const list = [
     points: 5,
     objectID: 1,
   },
-]
+];
 
 // To show rendering function in JSX
 function getLang(lang) {
   return lang;
 }
 
+// Root component or parent component of the List component
 function App() {
   return (
     <div>
@@ -37,24 +38,40 @@ function App() {
       {/* Render primitive variables */}
       <p>Hello {welcome.name} and welcome to {getLang(welcome.lang)}!</p>
 
+      {/* Add Search input box */}
       <label htmlFor="search">Search: </label>
       <input id="search" type="text" />
 
       <hr />
 
-      {/* render the list here */}
+      {/* // Render list elements 
       {list.map(function(item) {
         return <div>{item.title}</div>;
-      })}
-
-      <br />
+      })} <br />
 
       {list.map(item => {
         return <div>{item.url}</ div>;
       })}
 
-      <br />
+      <hr /> */}
 
+      {/* Call List component */}
+      <List />
+
+      {/* Footnote */}
+      <hr />
+      <p>Code by {name.getName()}</p>
+
+
+    </div>
+  );
+}
+
+// Create List function componet to render array
+// Child component of the App component 
+function List() {
+  return (
+    <div>
       {list.map(function(item) {
         return (
           <div key={item.objectID}>
@@ -68,9 +85,21 @@ function App() {
           </div>
         );
       })}
-
     </div>
-  );
+  )
 }
+
+class Developer {
+  constructor(firstName, lastName) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+
+  getName() {
+    return this.firstName + " " + this.lastName;
+  }
+}
+
+const name = new Developer('Carlos', 'Mertens')
 
 export default App;
