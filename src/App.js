@@ -37,11 +37,6 @@ function App() {
 
       {/* Render primitive variables */}
       <p>Hello {welcome.name} and welcome to {getLang(welcome.lang)}!</p>
-
-      {/* Add Search input box */}
-      <label htmlFor="search">Search: </label>
-      <input id="search" type="text" />
-
       <hr />
 
       {/* // Render list elements 
@@ -57,6 +52,9 @@ function App() {
 
       {/* Call List component */}
       <List />
+
+      {/* Call Search component */}
+      <Search />
 
       {/* Footnote */}
       <hr />
@@ -85,6 +83,16 @@ function List() {
           </div>
         );
       })}
+    </div>
+  )
+}
+
+function Search() {
+  return (
+    <div>
+      {/* Add Search input box */}
+      <label htmlFor="search">Search: </label>
+      <input id="search" type="text" />
     </div>
   )
 }
