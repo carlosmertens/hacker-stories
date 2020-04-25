@@ -10,37 +10,34 @@ const getLang = (lang) => {
   return lang;
 }
 
-const list = [
-  {
-    title: 'React',
-    url: 'http://reactjs.org/',
-    author: 'Jordan Walke',
-    num_comment: 3,
-    points: 4,
-    objectID: 0,
-  },
-  {
-    title: 'Redux',
-    url: 'http//redux.js.org/',
-    author: 'Dan Abramov, Andrew Clark',
-    num_comment: 2,
-    points: 5,
-    objectID: 1,
-  },
-];
-
 // Root component or parent component of the List component
 function App() {
+  const stories = [
+    {
+      title: 'React',
+      url: 'http://reactjs.org/',
+      author: 'Jordan Walke',
+      num_comment: 3,
+      points: 4,
+      objectID: 0,
+    },
+    {
+      title: 'Redux',
+      url: 'http//redux.js.org/',
+      author: 'Dan Abramov, Andrew Clark',
+      num_comment: 2,
+      points: 5,
+      objectID: 1,
+    },
+  ];
   return (
     <div>
       <h1>My Hacker Stories</h1>
-
       {/* Render primitive variables */}
       <h3>Hello {welcome.name} and welcome to {getLang(welcome.lang)}!</h3>
-      <hr />
 
       {/* Call List component */}
-      <List />
+      <List list={stories} />
 
       {/* Call Search component */}
       <Search />
@@ -50,12 +47,12 @@ function App() {
       <p>Code by {name.getName()}</p>
     </div>
   );
-}
+};
 
 // Create List componet to render array
 // Child component of the App component 
-const List = () =>
-  list.map(item => (
+const List = props =>
+  props.list.map(item => (
     <div key={item.objectID}>
       <span>{item.title}</span> <br />
       <span>
@@ -67,18 +64,27 @@ const List = () =>
     </div>
   ));
 
-{/* // Render list elements with keyword function
-      {list.map(function(item) {
-        return <div>{item.title}</div>;
-      })};
-      */}
+/* // Render list elements with keyword function
+  {list.map(function(item) {
+    return <div>{item.title}</div>;
+    };
+  )};
+*/
 
 // Create Search component
-const Search = () =>
-  <div>
-    <label htmlFor="search">Search: </label>
-    <input id="search" type="text" />
-  </div>
+const Search = () => {
+  const handleChange = event => {
+    console.log(event.target.value);
+  };
+
+  return (
+    <div>
+      <label htmlFor="search">Search: </label>
+      <input id="search" type="text" onChange={handleChange} />
+    </div>
+  )
+}
+
 
 
 class Developer {
