@@ -10,7 +10,7 @@ const getLang = (lang) => {
   return lang;
 }
 
-// Root component or parent component of the List component
+// Root component or parent component of the List, Search components
 function App() {
   const stories = [
     {
@@ -31,69 +31,63 @@ function App() {
     },
   ];
 
+  // Initiate Search state
+  const [searchTerm, setSearchTerm] = React.useState('');
+
+  // Create callback handler
   const handleSearch = event => {
-    console.log(event.target.value)
+    setSearchTerm(event.target.value)
   }
 
+  //  Filter List with searched term (words)
+  const searchedStories = stories.filter(story =>
+    story.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  // Return view JSX
   return (
     <div>
       <h1>My Hacker Stories</h1>
       {/* Render primitive variables */}
       <h3>Hello {welcome.name} and welcome to {getLang(welcome.lang)}!</h3>
 
-      {/* Call List component */}
-      <List list={stories} />
-
       {/* Call Search component */}
       <Search onSearch={handleSearch} />
 
+      <hr />
+
+      {/* Call ListDisplay component */}
+      <ListDisplay list={searchedStories} />
+
       {/* Footnote */}
       <hr />
-      <p>Code by {name.getName()}</p>
+      <p><i>Code by {name.getName()}</i></p>
     </div>
   );
 };
 
-// Create List componet to render array
-// Child component of the App component 
-const List = props =>
+// Create ListDisplay componet to render array
+// Child component of the App component and sibling component of Search
+const ListDisplay = props =>
   props.list.map(item => (
     <div key={item.objectID}>
-      <span>{item.title}</span> <br />
+      <span>{item.title}-</span>
       <span>
-        <a href={item.url}>{item.url}</a>
-      </span> <br />
-      <span> {item.author}</span> <br />
-      <span>{item.num_comment}</span> <br />
-      <span>{item.points}</span> <br /> <br />
+        <a href={item.url}>{item.url}-</a>
+      </span>
+      <span> {item.author}-</span>
+      <span>{item.num_comment}-</span>
+      <span>{item.points}</span>
     </div>
   ));
 
-/* // Render list elements with keyword function
-  {list.map(function(item) {
-    return <div>{item.title}</div>;
-    };
-  )};
-*/
-
 // Create Search component
-const Search = props => {
-  const [searchTerm, setSearchTerm] = React.useState('')
-  const handleChange = event => {
-    setSearchTerm(event.target.value);
-    props.onSearch(event)
-  };
+const Search = props =>
+  <div className="search-box">
+    <label htmlFor="search">Search: </label>
+    <input id="search" type="text" onChange={props.onSearch} />
+  </div>
 
-  return (
-    <div>
-      <label htmlFor="search">Search: </label>
-      <input id="search" type="text" onChange={handleChange} />
-      <p>
-        Searching for ... <strong>{searchTerm}</strong>
-      </p>
-    </div>
-  )
-}
 
 
 
