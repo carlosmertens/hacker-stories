@@ -17,7 +17,7 @@ function App() {
       title: 'React',
       url: 'http://reactjs.org/',
       author: 'Jordan Walke',
-      num_comment: 3,
+      num_comments: 3,
       points: 4,
       objectID: 0,
     },
@@ -25,7 +25,7 @@ function App() {
       title: 'Redux',
       url: 'http//redux.js.org/',
       author: 'Dan Abramov, Andrew Clark',
-      num_comment: 2,
+      num_comments: 2,
       points: 5,
       objectID: 1,
     },
@@ -68,28 +68,36 @@ function App() {
 
 // Create ListDisplay componet to render array
 // Child component of the App component and sibling component of Search
-const ListDisplay = props =>
-  props.list.map(item => (
-    <div key={item.objectID}>
-      <span>{item.title}-</span>
-      <span>
-        <a href={item.url}>{item.url}-</a>
-      </span>
-      <span> {item.author}-</span>
-      <span>{item.num_comment}-</span>
-      <span>{item.points}</span>
-    </div>
-  ));
+const ListDisplay = ({ list }) =>
+  list.map(({ objectID, ...item }) =>
+    <ItemList key={item.objectID} {...item} />);
+
+// Nested Destructuring the props
+const ItemList = ({ title, url, author, num_comments, points }) => (
+  <div>
+    <span>{title}-</span>
+    <span><a href={url}>{url}</a></span>
+    <span> {author}-</span>
+    <span>{num_comments}-</span>
+    <span>{points}</span>
+  </div>
+);
+
 
 // Create Search component
-const Search = props =>
-  <div className="search-box">
+// TODO: Refactor component from arrow function concise body to block body
+// Use object destructuring of the props
+const Search = ({ search, onSearch }) => (
+  <div>
     <label htmlFor="search">Search: </label>
-    <input id="search" type="text" value={props.search} onChange={props.onSearch} />
+    <input
+      id="search"
+      type="text"
+      value={search}
+      onChange={onSearch}
+    />
   </div>
-
-
-
+);
 
 class Developer {
   constructor(firstName, lastName) {
