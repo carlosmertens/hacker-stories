@@ -85,10 +85,12 @@ function App() {
       {/* Call Search component */}
       <InputWithLabel
         id='search'
-        label='Search:'
         value={searchTerm}
+        isfocused
         onInputChange={handleSearch}
-      />
+      >
+        <strong>Search:</strong>
+      </InputWithLabel>
 
       <hr />
 
@@ -128,12 +130,37 @@ const ItemList = ({ title, url, author, num_comments, points }) => (
 // Create Search component
 // TODO: Refactor component from arrow function concise body to block body
 // Use object destructuring of the props
-const InputWithLabel = ({ id, label, type = "text", value, onInputChange }) => (
-  <>
-    <label htmlFor={id}>{label}</label>
-    <input id={id} type={type} value={value} onChange={onInputChange} />
-  </>
-);
+const InputWithLabel = ({
+  id,
+  value,
+  type = "text",
+  onInputChange,
+  isFocused,
+  children,
+}) => {
+  const inputRef = React.useRef();
+
+  React.useEffect(() => {
+    if (isFocused && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isFocused]);
+
+  return (
+    <>
+      <label htmlFor={id}>{children}</label>
+      &nbsp;
+      <input
+        ref={inputRef}
+        id={id}
+        type={type}
+        value={value}
+        onChange={onInputChange}
+        autoFocus={isFocused}
+      />
+    </>
+  );
+};
 
 class Developer {
   constructor(firstName, lastName) {
