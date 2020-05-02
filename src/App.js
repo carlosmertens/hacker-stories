@@ -10,6 +10,19 @@ const getLang = (lang) => {
   return lang;
 };
 
+// Create custom hook with (useState and useEffect)
+const useSemiPersistentSate = (key, initialState) => {
+  const [value, setValue] = React.useState(
+    localStorage.getItem(key) || initialState
+  );
+
+  React.useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [value, key]);
+
+  return [value, setValue];
+};
+
 // Root component or parent component of the List, Search components
 function App() {
   const stories = [
@@ -29,16 +42,26 @@ function App() {
       points: 5,
       objectID: 1,
     },
+    {
+      title: "Python",
+      url: "http://python.org/",
+      author: "Guido van Rossum",
+      num_comments: 3,
+      points: 4,
+      objectID: 2,
+    },
+    {
+      title: "Go",
+      url: "http://golang.org/",
+      author: "Robert Griesemer, Rob Pike, and Ken Thompson",
+      num_comments: 3,
+      points: 4,
+      objectID: 3,
+    },
   ];
 
   // Initiate Search state
-  const [searchTerm, setSearchTerm] = React.useState(
-    localStorage.getItem("search") || "React"
-  );
-
-  React.useEffect(() => {
-    localStorage.setItem("search", searchTerm);
-  }, [searchTerm]);
+  const [searchTerm, setSearchTerm] = useSemiPersistentSate("search", "Go");
 
   // Create callback handler
   const handleSearch = (event) => {
@@ -52,7 +75,7 @@ function App() {
 
   // Return view JSX
   return (
-    <div>
+    <>
       <h1>My Hacker Stories</h1>
       {/* Render primitive variables */}
       <h3>
@@ -60,7 +83,12 @@ function App() {
       </h3>
 
       {/* Call Search component */}
-      <Search search={searchTerm} onSearch={handleSearch} />
+      <InputWithLabel
+        id='search'
+        label='Search:'
+        value={searchTerm}
+        onInputChange={handleSearch}
+      />
 
       <hr />
 
@@ -72,7 +100,7 @@ function App() {
       <p>
         <i>Code by {name.getName()}</i>
       </p>
-    </div>
+    </>
   );
 }
 
@@ -100,11 +128,11 @@ const ItemList = ({ title, url, author, num_comments, points }) => (
 // Create Search component
 // TODO: Refactor component from arrow function concise body to block body
 // Use object destructuring of the props
-const Search = ({ search, onSearch }) => (
-  <div>
-    <label htmlFor="search">Search: </label>
-    <input id="search" type="text" value={search} onChange={onSearch} />
-  </div>
+const InputWithLabel = ({ id, label, type = "text", value, onInputChange }) => (
+  <>
+    <label htmlFor={id}>{label}</label>
+    <input id={id} type={type} value={value} onChange={onInputChange} />
+  </>
 );
 
 class Developer {
