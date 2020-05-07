@@ -10,6 +10,42 @@ const getLang = (lang) => {
   return lang;
 };
 
+// List of stories (Initial)
+const initialStories = [
+  {
+    title: "React",
+    url: "http://reactjs.org/",
+    author: "Jordan Walke",
+    num_comments: 3,
+    points: 4,
+    objectID: 0,
+  },
+  {
+    title: "Redux",
+    url: "http//redux.js.org/",
+    author: "Dan Abramov, Andrew Clark",
+    num_comments: 2,
+    points: 5,
+    objectID: 1,
+  },
+  {
+    title: "Python",
+    url: "http://python.org/",
+    author: "Guido van Rossum",
+    num_comments: 3,
+    points: 4,
+    objectID: 2,
+  },
+  {
+    title: "Go",
+    url: "http://golang.org/",
+    author: "Robert Griesemer, Rob Pike, and Ken Thompson",
+    num_comments: 3,
+    points: 4,
+    objectID: 3,
+  },
+];
+
 // Create custom hook with (useState and useEffect)
 const useSemiPersistentSate = (key, initialState) => {
   const [value, setValue] = React.useState(
@@ -25,64 +61,40 @@ const useSemiPersistentSate = (key, initialState) => {
 
 // Root component or parent component of the List, Search components
 function App() {
-  const stories = [
-    {
-      title: "React",
-      url: "http://reactjs.org/",
-      author: "Jordan Walke",
-      num_comments: 3,
-      points: 4,
-      objectID: 0,
-    },
-    {
-      title: "Redux",
-      url: "http//redux.js.org/",
-      author: "Dan Abramov, Andrew Clark",
-      num_comments: 2,
-      points: 5,
-      objectID: 1,
-    },
-    {
-      title: "Python",
-      url: "http://python.org/",
-      author: "Guido van Rossum",
-      num_comments: 3,
-      points: 4,
-      objectID: 2,
-    },
-    {
-      title: "Go",
-      url: "http://golang.org/",
-      author: "Robert Griesemer, Rob Pike, and Ken Thompson",
-      num_comments: 3,
-      points: 4,
-      objectID: 3,
-    },
-  ];
-
-  // Initiate Search state
+  // Initiate search state
   const [searchTerm, setSearchTerm] = useSemiPersistentSate("search", "Go");
 
-  // Create callback handler
+  // Initiate stories list states
+  const [stories, setStories] = React.useState(initialStories);
+
+  // Create callback handler to remove item
+  const handleRemoveStory = (item) => {
+    const newStories = stories.filter(
+      (story) => item.objectID !== story.objectID
+    );
+
+    setStories(newStories);
+  };
+
+  // Create callback handler to get input state
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  //  Filter List with searched term (words)
+  //  Filter List with searchTerm state
   const searchedStories = stories.filter((story) =>
     story.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Return view JSX
+  // Return JSX
   return (
     <>
       <h1>My Hacker Stories</h1>
-      {/* Render primitive variables */}
       <h3>
         Hello {welcome.name} and welcome to {getLang(welcome.lang)}!
       </h3>
 
-      {/* Call Search component */}
+      {/* Call InputWithLabel component */}
       <InputWithLabel
         id='search'
         value={searchTerm}
@@ -94,8 +106,8 @@ function App() {
 
       <hr />
 
-      {/* Call ListDisplay component */}
-      <ListDisplay list={searchedStories} />
+      {/* Call List component */}
+      <List list={searchedStories} onRemoveItem={handleRemoveStory} />
 
       {/* Footnote */}
       <hr />
@@ -106,30 +118,40 @@ function App() {
   );
 }
 
-// Create ListDisplay componet to render array
-// Child component of the App component and sibling component of Search
-// Use rest operatos (...) to separate and to map ID and items
-const ListDisplay = ({ list }) =>
-  list.map(({ objectID, ...item }) => (
-    <ItemList key={item.objectID} {...item} />
+// Create List component handler to map list
+const List = ({ list, onRemoveItem }) =>
+  list.map((item) => (
+    // Call Item component
+    <Item key={item.objectID} item={item} onRemoveItem={onRemoveItem} />
   ));
 
-// Nested Destructuring the props
-const ItemList = ({ title, url, author, num_comments, points }) => (
-  <div>
-    <span>{title}-</span>
-    <span>
-      <a href={url}>{url}</a>
-    </span>
-    <span> {author}-</span>
-    <span>{num_comments}-</span>
-    <span>{points}</span>
-  </div>
-);
+// Create Item componet to display list and to remove element
+const Item = ({ item, onRemoveItem }) => {
+  // Create function handler to remove item (Example)
+  // function handleRemoveItem() {
+  // onRemoveItem(item);
+  // }
+  // Note: We will use function into JSX onClick
 
-// Create Search component
-// TODO: Refactor component from arrow function concise body to block body
-// Use object destructuring of the props
+  return (
+    <div>
+      <span>
+        <button type='button' onClick={() => onRemoveItem(item)}>
+          X
+        </button>
+      </span>
+      <span>{item.title}-</span>
+      <span>
+        <a href={item.url}>{item.url}</a>
+      </span>
+      <span> {item.author}-</span>
+      <span>{item.num_comments}-</span>
+      <span>{item.points}</span>
+    </div>
+  );
+};
+
+// Create reusable Search component destructuring the props
 const InputWithLabel = ({
   id,
   value,
@@ -138,6 +160,7 @@ const InputWithLabel = ({
   isFocused,
   children,
 }) => {
+  // Implement imperative focus attribute
   const inputRef = React.useRef();
 
   React.useEffect(() => {
@@ -174,7 +197,7 @@ class Developer {
   }
 }
 
-// Cretate an class instantiation
+// Cretate a class instantiation
 const name = new Developer("Carlos", "Mertens");
 
 export default App;
